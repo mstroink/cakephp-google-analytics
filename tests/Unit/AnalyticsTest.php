@@ -154,6 +154,27 @@ class AnalyticsTest extends TestCase
     }
 
     /** @test */
+    public function it_can_fetch_active_users()
+    {
+        $expectedArguments = [
+            $this->viewId,
+            'rt:activeUsers',
+            []
+        ];
+
+        $this->analyticsClient
+            ->shouldReceive('performRealTimeQuery')->withArgs($expectedArguments)
+            ->once()
+            ->andReturn([
+                'rows' => [[17]],
+            ]);
+
+        $response = $this->analytics->fetchActiveUsers();
+
+        $this->assertEquals(17, $response);
+    }
+
+    /** @test */
     public function it_can_fetch_the_top_browsers()
     {
         $expectedArguments = [

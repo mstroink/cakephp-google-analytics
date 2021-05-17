@@ -6,6 +6,7 @@ use Cake\Chronos\Chronos;
 use Cake\Collection\Collection;
 use Google_Service_Analytics;
 use Google_Service_Analytics_GaData;
+use Google_Service_Analytics_RealtimeData;
 use Spatie\Macroable\Macroable;
 
 use function collection as collect;
@@ -116,6 +117,13 @@ class Analytics
         ]);
     }
 
+    public function fetchActiveUsers(): int
+    {
+        $response = $this->performRealTimeQuery('rt:activeUsers');
+
+        return $response['rows'][0][0] ?? 0;
+    }
+
     public function fetchTopBrowsers(Period $period, int $maxResults = 10): Collection
     {
         $response = $this->performQuery(
@@ -166,6 +174,22 @@ class Analytics
             $period->endDate,
             $metrics,
             $others,
+        );
+    }
+
+    /**
+     * Call the real time query method on the authenticated client.
+     *
+     * @param  string $metrics
+     * @param  array $others
+     * @return Google_Service_Analytics_RealtimeData|array|null
+     */
+    public function performRealTimeQuery(string $metrics, array $others = []): Google_Service_Analytics_RealtimeData | array | null
+    {
+        return $this->client->performRealTimeQuery(
+            $this->viewId,
+            $metrics,
+            $others
         );
     }
 

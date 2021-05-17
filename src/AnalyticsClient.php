@@ -7,6 +7,7 @@ use Closure;
 use DateTimeInterface;
 use Google_Service_Analytics;
 use Google_Service_Analytics_GaData;
+use Google_Service_Analytics_RealtimeData;
 
 class AnalyticsClient
 {
@@ -73,6 +74,28 @@ class AnalyticsClient
             }
 
             return $result;
+        });
+    }
+
+    /**
+     * RealTime Query the Google Analytics Service with given parameters.
+     *
+     * @param string $viewId
+     * @param string $metrics
+     * @param array $others
+     *
+     * @return Google_Service_Analytics_RealtimeData|array|null
+     */
+    public function performRealTimeQuery(string $viewId, string $metrics, array $others = []): Google_Service_Analytics_RealtimeData | array | null
+    {
+        $cacheName = $this->determineCacheName(func_get_args());
+
+        return $this->remember($cacheName, $this->cacheLifeTimeInMinutes, function () use ($viewId, $metrics, $others) {
+            return $this->service->data_realtime->get(
+                "ga:{$viewId}",
+                $metrics,
+                $others
+            );
         });
     }
 
