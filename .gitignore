@@ -7,3 +7,4 @@ vendor
 .vscode
 tmp
 .php-cs-fixer.cache
+.DS_Store
