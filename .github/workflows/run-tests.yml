@@ -11,7 +11,7 @@ jobs:
                 os: [ubuntu-latest]
                 php: [8.0]
                 cakephp: [4.2]
-                dependency-version: [prefer-lowest, prefer-stable]
+                dependency-version: [prefer-stable]
 
         name: P${{ matrix.php }} - L${{ matrix.cakephp }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
