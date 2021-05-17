@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Analytics;
+namespace MStroink\Analytics;
 
 use Cake\Chronos\Chronos;
 use Cake\Collection\Collection;

@@ -1,17 +1,15 @@
 <?php
 
-namespace Spatie\Analytics\Tests\Integration;
+namespace MStroink\Analytics\Tests\Integration;
 
 use Cake\Chronos\Chronos;
 use Cake\Core\Configure;
 use Cake\Core\Container;
 use Cake\Core\ContainerInterface;
 use Cake\TestSuite\TestCase;
-use Carbon\Carbon;
-use Spatie\Analytics\Analytics;
-use Spatie\Analytics\AnalyticsServiceProvider;
-use Spatie\Analytics\Exceptions\InvalidConfiguration;
-use Storage;
+use MStroink\Analytics\Analytics;
+use MStroink\Analytics\AnalyticsServiceProvider;
+use MStroink\Analytics\Exceptions\InvalidConfiguration;
 
 class AnalyticsServiceProviderTest extends TestCase
 {
@@ -54,7 +52,7 @@ class AnalyticsServiceProviderTest extends TestCase
 
         $analytics = $this->container->get(Analytics::class);
 
-        $this->assertInstanceOf(\Spatie\Analytics\Analytics::class, $analytics);
+        $this->assertInstanceOf(\MStroink\Analytics\Analytics::class, $analytics);
     }
 
     /** @test */
@@ -76,7 +74,7 @@ class AnalyticsServiceProviderTest extends TestCase
 
         $analytics = $this->container->get(Analytics::class);
 
-        $this->assertInstanceOf(\Spatie\Analytics\Analytics::class, $analytics);
+        $this->assertInstanceOf(\MStroink\Analytics\Analytics::class, $analytics);
     }
 
     protected function get_credentials()

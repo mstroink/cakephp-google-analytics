@@ -1,6 +1,6 @@
 {
     "name": "mstroink/cakephp-google-analytics",
-    "description": "A CakePHP package to retrieve Google Analytics data. Based on Spatie Laravel Analytics",
+    "description": "A CakePHP package to retrieve Google Analytics data. Forked from spatie/laravel-analytics",
     "type": "cakephp-plugin",
     "keywords": [
         "google",
@@ -34,12 +34,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Analytics\\": "src"
+            "MStroink\\Analytics\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\Analytics\\Tests\\": "tests",
+            "MStroink\\Analytics\\Tests\\": "tests",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }
     },

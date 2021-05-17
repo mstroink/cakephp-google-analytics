@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Analytics\Exceptions;
+namespace MStroink\Analytics\Exceptions;
 
 use DateTimeInterface;
 use Exception;

@@ -1,24 +1,24 @@
 <?php
 
-namespace Spatie\Analytics\Tests;
+namespace MStroink\Analytics\Tests;
 
 use Cake\Chronos\Chronos;
 use Cake\Collection\Collection;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Spatie\Analytics\Analytics;
-use Spatie\Analytics\AnalyticsClient;
-use Spatie\Analytics\Period;
+use MStroink\Analytics\Analytics;
+use MStroink\Analytics\AnalyticsClient;
+use MStroink\Analytics\Period;
 
 class AnalyticsTest extends TestCase
 {
-    /** @var \Spatie\Analytics\AnalyticsClient|\Mockery\Mock */
+    /** @var \MStroink\Analytics\AnalyticsClient|\Mockery\Mock */
     protected $analyticsClient;
 
     /** @var string */
     protected $viewId;
 
-    /** @var \Spatie\Analytics\Analytics */
+    /** @var \MStroink\Analytics\Analytics */
     protected $analytics;
 
     /** @var \Cake\Chronos\Chronos */

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Analytics;
+namespace MStroink\Analytics;
 
 use Cake\Cache\Cache;
 use Cake\Cache\CacheEngine;

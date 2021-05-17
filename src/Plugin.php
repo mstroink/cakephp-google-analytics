@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spatie\Analytics;
+namespace MStroink\Analytics;
 
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;

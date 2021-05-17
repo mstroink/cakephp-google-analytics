@@ -1,10 +1,10 @@
 <?php
 
-namespace Spatie\Analytics;
+namespace MStroink\Analytics;
 
 use Cake\Chronos\Chronos;
 use DateTimeInterface;
-use Spatie\Analytics\Exceptions\InvalidPeriod;
+use MStroink\Analytics\Exceptions\InvalidPeriod;
 
 class Period
 {

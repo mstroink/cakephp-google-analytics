@@ -1,11 +1,11 @@
 <?php
 
-namespace Spatie\Analytics;
+namespace MStroink\Analytics;
 
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
-use Spatie\Analytics\Exceptions\InvalidConfiguration;
+use MStroink\Analytics\Exceptions\InvalidConfiguration;
 
 class AnalyticsServiceProvider extends ServiceProvider
 {

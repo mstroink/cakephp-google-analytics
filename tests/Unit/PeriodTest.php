@@ -1,13 +1,12 @@
 <?php
 
-namespace Spatie\Analytics\Tests;
+namespace MStroink\Analytics\Tests;
 
-use Carbon\Carbon;
 use Cake\Chronos\Chronos;
 use Cake\TestSuite\TestCase;
 use DateTimeImmutable;
-use Spatie\Analytics\Exceptions\InvalidPeriod;
-use Spatie\Analytics\Period;
+use MStroink\Analytics\Exceptions\InvalidPeriod;
+use MStroink\Analytics\Period;
 
 class PeriodTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Analytics;
+namespace MStroink\Analytics;
 
 use DateTimeInterface;
 use Google_Service_Analytics;
