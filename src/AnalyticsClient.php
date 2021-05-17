@@ -2,10 +2,10 @@
 
 namespace MStroink\Analytics;
 
-use DateTimeInterface;
-use Google_Service_Analytics;
 use Cake\Cache\CacheEngine;
 use Closure;
+use DateTimeInterface;
+use Google_Service_Analytics;
 use Google_Service_Analytics_GaData;
 
 class AnalyticsClient

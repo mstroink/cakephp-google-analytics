@@ -5,10 +5,10 @@ namespace MStroink\Analytics\Tests;
 use Cake\Chronos\Chronos;
 use Cake\Collection\Collection;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use MStroink\Analytics\Analytics;
 use MStroink\Analytics\AnalyticsClient;
 use MStroink\Analytics\Period;
+use PHPUnit\Framework\TestCase;
 
 class AnalyticsTest extends TestCase
 {
