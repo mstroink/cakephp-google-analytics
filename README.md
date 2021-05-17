@@ -1,10 +1,10 @@
 #  Retrieve data from Google Analytics
 
-[![Latest Version](https://img.shields.io/github/release/spatie/laravel-analytics.svg?style=flat-square)](https://github.com/spatie/laravel-analytics/releases)
+[![Latest Version](https://img.shields.io/github/release/mstroink/cakephp-google-analytics.svg?style=flat-square)](https://github.com/mstroink/cakephp-google-analytics/releases)
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-![Test Status](https://img.shields.io/github/workflow/status/spatie/laravel-analytics/run-tests?label=tests&style=flat-square)
-![Check & fix styling](https://github.com/spatie/laravel-analytics/workflows/Check%20&%20fix%20styling/badge.svg)
-[![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-analytics.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-analytics)
+![Test Status](https://img.shields.io/github/workflow/status/mstroink/cakephp-google-analytics/run-tests?label=tests&style=flat-square)
+![Check & fix styling](https://github.com/mstroink/cakephp-google-analytics/workflows/Check%20&%20fix%20styling/badge.svg)
+[![Total Downloads](https://img.shields.io/packagist/dt/mstroink/cakephp-google-analytics.svg?style=flat-square)](https://packagist.org/packages/mstroink/cakephp-google-analytics)
 
 Just a simple port of the spatie/laravel-analytics package re-worked for CakePHP ^4.2.
 Be aware this plugin use the new Dependency Injection Container. This is an experimental feature that is not API stable yet.
