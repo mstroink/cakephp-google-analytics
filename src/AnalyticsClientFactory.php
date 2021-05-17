@@ -2,10 +2,11 @@
 
 namespace Spatie\Analytics;
 
+use Cake\Cache\Cache;
+use Cake\Cache\CacheEngine;
+use Cake\Cache\Engine\FileEngine;
 use Google_Client;
 use Google_Service_Analytics;
-use Illuminate\Contracts\Cache\Repository;
-use Illuminate\Support\Facades\Cache;
 use Symfony\Component\Cache\Adapter\Psr16Adapter;
 
 class AnalyticsClientFactory
@@ -29,32 +30,42 @@ class AnalyticsClientFactory
 
         $client->setAuthConfig($config['service_account_credentials_json']);
 
-        self::configureCache($client, $config['cache']);
+        self::configureClientCache($client, $config['cache']);
 
         return $client;
     }
 
-    protected static function configureCache(Google_Client $client, $config): void
+    protected static function configureClientCache(Google_Client $client, array $config): void
     {
-        $config = collect($config);
+        $engine = self::createCacheEngine($config);
 
-        $store = Cache::store($config->get('store'));
-
-        $cache = new Psr16Adapter($store);
+        $cache = new Psr16Adapter($engine);
 
         $client->setCache($cache);
-
-        $client->setCacheConfig(
-            $config->except('store')->toArray(),
-        );
     }
 
-    protected static function createAnalyticsClient(array $analyticsConfig, Google_Service_Analytics $googleService): AnalyticsClient
+    protected static function createAnalyticsClient(array $config, Google_Service_Analytics $googleService): AnalyticsClient
     {
-        $client = new AnalyticsClient($googleService, app(Repository::class));
+        $cache = self::createCacheEngine($config['cache']);
 
-        $client->setCacheLifeTimeInMinutes($analyticsConfig['cache_lifetime_in_minutes']);
+        $client = new AnalyticsClient($googleService, $cache);
+
+        $client->setCacheLifeTimeInMinutes($config['cache_lifetime_in_minutes']);
 
         return $client;
+    }
+
+    protected static function createCacheEngine(array $cacheConfig): CacheEngine
+    {
+        $name = $cacheConfig['config'] ?? 'analytics';
+
+        if (Cache::getConfig($name) === null) {
+            Cache::setConfig($name, [
+                'className' => FileEngine::class,
+                'duration' => '+1 year',
+            ]);
+        }
+
+        return Cache::pool($name);
     }
 }

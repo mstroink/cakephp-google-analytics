@@ -2,8 +2,8 @@
 
 namespace Spatie\Analytics\Tests;
 
-use Carbon\Carbon;
-use Illuminate\Support\Collection;
+use Cake\Chronos\Chronos;
+use Cake\Collection\Collection;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Spatie\Analytics\Analytics;
@@ -21,10 +21,10 @@ class AnalyticsTest extends TestCase
     /** @var \Spatie\Analytics\Analytics */
     protected $analytics;
 
-    /** @var \Carbon\Carbon */
+    /** @var \Cake\Chronos\Chronos */
     protected $startDate;
 
-    /** @var \Carbon\Carbon */
+    /** @var \Cake\Chronos\Chronos */
     protected $endDate;
 
     public function setUp(): void
@@ -35,9 +35,9 @@ class AnalyticsTest extends TestCase
 
         $this->analytics = new Analytics($this->analyticsClient, $this->viewId);
 
-        $this->startDate = Carbon::now()->subDays(7);
+        $this->startDate = Chronos::now()->subDays(7);
 
-        $this->endDate = Carbon::now();
+        $this->endDate = Chronos::now();
     }
 
     public function tearDown(): void
@@ -50,8 +50,8 @@ class AnalyticsTest extends TestCase
     {
         $expectedArguments = [
             $this->viewId,
-            $this->expectCarbon($this->startDate),
-            $this->expectCarbon($this->endDate),
+            $this->expectChronos($this->startDate),
+            $this->expectChronos($this->endDate),
             'ga:users,ga:pageviews',
             ['dimensions' => 'ga:date,ga:pageTitle'],
         ];
@@ -77,8 +77,8 @@ class AnalyticsTest extends TestCase
     {
         $expectedArguments = [
             $this->viewId,
-            $this->expectCarbon($this->startDate),
-            $this->expectCarbon($this->endDate),
+            $this->expectChronos($this->startDate),
+            $this->expectChronos($this->endDate),
             'ga:users,ga:pageviews',
             ['dimensions' => 'ga:date'],
         ];
@@ -105,8 +105,8 @@ class AnalyticsTest extends TestCase
 
         $expectedArguments = [
             $this->viewId,
-            $this->expectCarbon($this->startDate),
-            $this->expectCarbon($this->endDate),
+            $this->expectChronos($this->startDate),
+            $this->expectChronos($this->endDate),
             'ga:pageviews',
             ['dimensions' => 'ga:pagePath,ga:pageTitle', 'sort' => '-ga:pageviews', 'max-results' => $maxResults],
         ];
@@ -133,8 +133,8 @@ class AnalyticsTest extends TestCase
 
         $expectedArguments = [
             $this->viewId,
-            $this->expectCarbon($this->startDate),
-            $this->expectCarbon($this->endDate),
+            $this->expectChronos($this->startDate),
+            $this->expectChronos($this->endDate),
             'ga:pageviews',
             ['dimensions' => 'ga:fullReferrer', 'sort' => '-ga:pageviews', 'max-results' => $maxResults],
         ];
@@ -158,8 +158,8 @@ class AnalyticsTest extends TestCase
     {
         $expectedArguments = [
             $this->viewId,
-            $this->expectCarbon($this->startDate),
-            $this->expectCarbon($this->endDate),
+            $this->expectChronos($this->startDate),
+            $this->expectChronos($this->endDate),
             'ga:sessions',
             ['dimensions' => 'ga:browser', 'sort' => '-ga:sessions'],
         ];
@@ -178,7 +178,6 @@ class AnalyticsTest extends TestCase
             ]);
 
         $response = $this->analytics->fetchTopBrowsers(Period::create($this->startDate, $this->endDate), 3);
-
         $this->assertInstanceOf(Collection::class, $response);
         $this->assertEquals([
             ['browser' => 'Browser 1', 'sessions' => 100],
@@ -187,10 +186,10 @@ class AnalyticsTest extends TestCase
         ], $response->toArray());
     }
 
-    protected function expectCarbon(Carbon $carbon)
+    protected function expectChronos(Chronos $chronos)
     {
-        return Mockery::on(function (Carbon $argument) use ($carbon) {
-            return $argument->format('Y-m-d') == $carbon->format('Y-m-d');
+        return Mockery::on(function (Chronos $argument) use ($chronos) {
+            return $argument->format('Y-m-d') == $chronos->format('Y-m-d');
         });
     }
 }

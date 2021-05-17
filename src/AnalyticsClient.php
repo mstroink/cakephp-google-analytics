@@ -4,7 +4,9 @@ namespace Spatie\Analytics;
 
 use DateTimeInterface;
 use Google_Service_Analytics;
-use Illuminate\Contracts\Cache\Repository;
+use Cake\Cache\CacheEngine;
+use Closure;
+use Google_Service_Analytics_GaData;
 
 class AnalyticsClient
 {
@@ -12,7 +14,7 @@ class AnalyticsClient
 
     public function __construct(
         protected Google_Service_Analytics $service,
-        protected Repository $cache,
+        protected CacheEngine $cache,
     ) {
         //
     }
@@ -33,17 +35,17 @@ class AnalyticsClient
      * @param string $metrics
      * @param array $others
      *
-     * @return array|null
+     * @return Google_Service_Analytics_GaData|array|null
      */
-    public function performQuery(string $viewId, DateTimeInterface $startDate, DateTimeInterface $endDate, string $metrics, array $others = []): array | null
+    public function performQuery(string $viewId, DateTimeInterface $startDate, DateTimeInterface $endDate, string $metrics, array $others = []): Google_Service_Analytics_GaData | array | null
     {
         $cacheName = $this->determineCacheName(func_get_args());
 
         if ($this->cacheLifeTimeInMinutes === 0) {
-            $this->cache->forget($cacheName);
+            $this->cache->delete($cacheName);
         }
 
-        return $this->cache->remember($cacheName, $this->cacheLifeTimeInMinutes, function () use ($viewId, $startDate, $endDate, $metrics, $others) {
+        return $this->remember($cacheName, $this->cacheLifeTimeInMinutes, function () use ($viewId, $startDate, $endDate, $metrics, $others) {
             $result = $this->service->data_ga->get(
                 "ga:{$viewId}",
                 $startDate->format('Y-m-d'),
@@ -84,6 +86,27 @@ class AnalyticsClient
      */
     protected function determineCacheName(array $properties): string
     {
-        return 'spatie.laravel-analytics.'.md5(serialize($properties));
+        return 'cakephp-analytics_' . md5(serialize($properties));
+    }
+
+    /**
+     * Get an item from the cache, or execute the given Closure and store the result.
+     *
+     * @param  string  $key
+     * @param  \DateTimeInterface|\DateInterval|int|null  $ttl
+     * @param  \Closure  $callback
+     * @return mixed
+     */
+    protected function remember(string $key, $ttl, Closure $callback): mixed
+    {
+        $value = $this->cache->get($key);
+
+        if (! is_null($value)) {
+            return $value;
+        }
+
+        $this->cache->set($key, $value = $callback(), $ttl);
+
+        return $value;
     }
 }

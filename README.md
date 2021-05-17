@@ -1,5 +1,3 @@
-<p align="center"><img src="/art/socialcard.png" alt="Social Card of Laravel Analytics"></p>
-
 #  Retrieve data from Google Analytics
 
 [![Latest Version](https://img.shields.io/github/release/spatie/laravel-analytics.svg?style=flat-square)](https://github.com/spatie/laravel-analytics/releases)
@@ -8,46 +6,51 @@
 ![Check & fix styling](https://github.com/spatie/laravel-analytics/workflows/Check%20&%20fix%20styling/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-analytics.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-analytics)
 
+Just a simple port of the spatie/laravel-analytics package re-worked for CakePHP ^4.2.
+Be aware this plugin use the new Dependency Injection Container. This is an experimental feature that is not API stable yet.
+
 Using this package you can easily retrieve data from Google Analytics.
 
 Here are a few examples of the provided methods:
 
 ```php
-use Analytics;
-use Spatie\Analytics\Period;
+use MStroink\Analytics\Analytics;
+use MStroink\Analytics\Period;
 
-//fetch the most visited pages for today and the past week
-Analytics::fetchMostVisitedPages(Period::days(7));
+// In src/Controller/DashboardController.php
+class DashboardController extends AppController
+{
+    public function view(Analytics $analytics)
+    {
+        //fetch the most visited pages for today and the past week
+        $analytics->fetchMostVisitedPages(Period::days(7));
 
-//fetch visitors and page views for the past week
-Analytics::fetchVisitorsAndPageViews(Period::days(7));
+        //fetch visitors and page views for the past week
+        $analytics->fetchVisitorsAndPageViews(Period::days(7));
+    }
+}
 ```
 
 Most methods will return an `\Illuminate\Support\Collection` object containing the results.
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-analytics.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-analytics)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Installation
 
 This package can be installed through Composer.
 
 ``` bash
-composer require spatie/laravel-analytics
+composer require mstroink/cakephp-analytics
 ```
 
-Optionally, you can publish the config file of this package with this command:
+Load the plugin
 
 ``` bash
-php artisan vendor:publish --provider="Spatie\Analytics\AnalyticsServiceProvider"
+bin/cake plugin load MStroink/Analytics 
 ```
 
-The following config file will be published in `config/analytics.php`
+## Configuration
+
+Create your config file `config/analytics.php`
 
 ```php
 return [
@@ -62,7 +65,7 @@ return [
      * to learn how to get this file. You can also pass the credentials as an array
      * instead of a file path.
      */
-    'service_account_credentials_json' => storage_path('app/analytics/service-account-credentials.json'),
+    'service_account_credentials_json' => ROOT . DS . 'config' . DS . 'service-account-credentials.json',
 
     /*
      * The amount of minutes the Google API responses will be cached.
@@ -71,17 +74,23 @@ return [
     'cache_lifetime_in_minutes' => 60 * 24,
 
     /*
-     * Here you may configure the "store" that the underlying Google_Client will
-     * use to store it's data.  You may also add extra parameters that will
-     * be passed on setCacheConfig (see docs for google-api-php-client).
-     *
-     * Optional parameters: "lifetime", "prefix"
+     * The name of the cache config engine
      */
     'cache' => [
-        'store' => 'file',
+        'config' => 'analytics',
     ],
 ];
 ```
+
+In your config/app.php add a cache config named `analytics` under the Cache key with required config. For e.g.:
+
+```php
+'analytics' => [
+    'className' => FileEngine::class,
+    'duration' => '+1 year', //note that lifetime is managed by setting cache_lifetime_in_minutes
+],
+```
+
 
 ## How to obtain the credentials to communicate with Google Analytics
 
@@ -127,19 +136,19 @@ You'll need the `View ID` displayed there.
 
 ## Usage
 
-When the installation is done you can easily retrieve Analytics data. Nearly all methods will return an `Illuminate\Support\Collection`-instance.
+When the installation is done you can easily retrieve Analytics data. Nearly all methods will return an `Cake\Collection\Collection`-instance.
 
 
 Here are a few examples using periods
 ```php
 //retrieve visitors and pageview data for the current day and the last seven days
-$analyticsData = Analytics::fetchVisitorsAndPageViews(Period::days(7));
+$analyticsData = $analytics->fetchVisitorsAndPageViews(Period::days(7));
 
 //retrieve visitors and pageviews since the 6 months ago
-$analyticsData = Analytics::fetchVisitorsAndPageViews(Period::months(6));
+$analyticsData = $analytics->fetchVisitorsAndPageViews(Period::months(6));
 
 //retrieve sessions and pageviews with yearMonth dimension since 1 year ago
-$analyticsData = Analytics::performQuery(
+$analyticsData = $analytics->performQuery(
     Period::years(1),
     'ga:sessions',
     [
@@ -154,8 +163,8 @@ $analyticsData = Analytics::performQuery(
 If you want to have more control over the period you want to fetch data for, you can pass a `startDate` and an `endDate` to the period object.
 
 ```php
-$startDate = Carbon::now()->subYear();
-$endDate = Carbon::now();
+$startDate = Chronos::now()->subYear();
+$endDate = Chronos::now();
 
 Period::create($startDate, $endDate);
 ```
@@ -221,7 +230,7 @@ public function performQuery(Period $period, string $metrics, array $others = []
 You can get access to the underlying `Google_Service_Analytics` object:
 
 ```php
-Analytics::getAnalyticsService();
+$analytics->getAnalyticsService();
 ```
 
 ## Testing
@@ -232,17 +241,17 @@ Run the tests with:
 vendor/bin/phpunit
 ```
 
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-## Security
+## Support Spatie
 
-If you discover any security related issues, please email freek@spatie.be instead of using the issue tracker.
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-analytics.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-analytics)
+
+We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
+
+We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Credits
 

@@ -12,7 +12,7 @@ return [
      * to learn how to get this file. You can also pass the credentials as an array
      * instead of a file path.
      */
-    'service_account_credentials_json' => storage_path('app/analytics/service-account-credentials.json'),
+    'service_account_credentials_json' => ROOT . DS . 'config' . DS . 'service-account-credentials.json',
 
     /*
      * The amount of minutes the Google API responses will be cached.
@@ -20,14 +20,7 @@ return [
      */
     'cache_lifetime_in_minutes' => 60 * 24,
 
-    /*
-     * Here you may configure the "store" that the underlying Google_Client will
-     * use to store it's data.  You may also add extra parameters that will
-     * be passed on setCacheConfig (see docs for google-api-php-client).
-     *
-     * Optional parameters: "lifetime", "prefix"
-     */
     'cache' => [
-        'store' => 'file',
+        'config' => 'analytics',
     ],
 ];

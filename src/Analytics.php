@@ -2,10 +2,13 @@
 
 namespace Spatie\Analytics;
 
-use Carbon\Carbon;
+use Cake\Chronos\Chronos;
+use Cake\Collection\Collection;
 use Google_Service_Analytics;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Traits\Macroable;
+use Google_Service_Analytics_GaData;
+use Spatie\Macroable\Macroable;
+
+use function collection as collect;
 
 class Analytics
 {
@@ -38,7 +41,7 @@ class Analytics
         );
 
         return collect($response['rows'] ?? [])->map(fn (array $dateRow) => [
-            'date' => Carbon::createFromFormat('Ymd', $dateRow[0]),
+            'date' => Chronos::createFromFormat('Ymd', $dateRow[0]),
             'pageTitle' => $dateRow[1],
             'visitors' => (int) $dateRow[2],
             'pageViews' => (int) $dateRow[3],
@@ -54,7 +57,7 @@ class Analytics
         );
 
         return collect($response['rows'] ?? [])->map(fn (array $dateRow) => [
-            'date' => Carbon::createFromFormat('Ymd', $dateRow[0]),
+            'date' => Chronos::createFromFormat('Ymd', $dateRow[0]),
             'visitors' => (int) $dateRow[1],
             'pageViews' => (int) $dateRow[2],
         ]);
@@ -139,11 +142,11 @@ class Analytics
     protected function summarizeTopBrowsers(Collection $topBrowsers, int $maxResults): Collection
     {
         return $topBrowsers
-            ->take($maxResults - 1)
-            ->push([
+            ->take($maxResults)
+            ->appendItem([
                 'browser' => 'Others',
-                'sessions' => $topBrowsers->splice($maxResults - 1)->sum('sessions'),
-            ]);
+                'sessions' => $topBrowsers->take($topBrowsers->count(), $maxResults - 1)->sumOf('sessions'),
+            ], $maxResults - 1);
     }
 
     /**
@@ -153,9 +156,9 @@ class Analytics
      * @param string $metrics
      * @param array  $others
      *
-     * @return array|null
+     * @return Google_Service_Analytics_GaData|array|null
      */
-    public function performQuery(Period $period, string $metrics, array $others = []): array | null
+    public function performQuery(Period $period, string $metrics, array $others = []): Google_Service_Analytics_GaData | array | null
     {
         return $this->client->performQuery(
             $this->viewId,

@@ -2,38 +2,35 @@
 
 namespace Spatie\Analytics;
 
+use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
+use Cake\Core\ServiceProvider;
 use Spatie\Analytics\Exceptions\InvalidConfiguration;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class AnalyticsServiceProvider extends PackageServiceProvider
+class AnalyticsServiceProvider extends ServiceProvider
 {
-    public function configurePackage(Package $package): void
+    protected $provides = [
+        AnalyticsClient::class,
+        Analytics::class,
+    ];
+ 
+    public function services(ContainerInterface $container): void
     {
-        $package
-            ->name('laravel-analytics')
-            ->hasConfigFile();
-    }
-
-    public function registeringPackage(): void
-    {
-        $this->app->bind(AnalyticsClient::class, function () {
-            $analyticsConfig = config('analytics');
+        $container->add(AnalyticsClient::class, function () {
+            $analyticsConfig = Configure::read('Analytics');
 
             return AnalyticsClientFactory::createForConfig($analyticsConfig);
         });
 
-        $this->app->bind(Analytics::class, function () {
-            $analyticsConfig = config('analytics');
+        $container->add(Analytics::class, function () use ($container) {
+            $analyticsConfig = Configure::read('Analytics');
 
             $this->guardAgainstInvalidConfiguration($analyticsConfig);
 
-            $client = app(AnalyticsClient::class);
+            $client = $container->get(AnalyticsClient::class);
 
             return new Analytics($client, $analyticsConfig['view_id']);
         });
-
-        $this->app->alias(Analytics::class, 'laravel-analytics');
     }
 
     protected function guardAgainstInvalidConfiguration(array $analyticsConfig = null): void

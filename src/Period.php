@@ -2,7 +2,7 @@
 
 namespace Spatie\Analytics;
 
-use Carbon\Carbon;
+use Cake\Chronos\Chronos;
 use DateTimeInterface;
 use Spatie\Analytics\Exceptions\InvalidPeriod;
 
@@ -19,27 +19,27 @@ class Period
 
     public static function days(int $numberOfDays): static
     {
-        $endDate = Carbon::today();
+        $endDate = Chronos::today();
 
-        $startDate = Carbon::today()->subDays($numberOfDays)->startOfDay();
+        $startDate = Chronos::today()->subDays($numberOfDays)->startOfDay();
 
         return new static($startDate, $endDate);
     }
 
     public static function months(int $numberOfMonths): static
     {
-        $endDate = Carbon::today();
+        $endDate = Chronos::today();
 
-        $startDate = Carbon::today()->subMonths($numberOfMonths)->startOfDay();
+        $startDate = Chronos::today()->subMonths($numberOfMonths)->startOfDay();
 
         return new static($startDate, $endDate);
     }
 
     public static function years(int $numberOfYears): static
     {
-        $endDate = Carbon::today();
+        $endDate = Chronos::today();
 
-        $startDate = Carbon::today()->subYears($numberOfYears)->startOfDay();
+        $startDate = Chronos::today()->subYears($numberOfYears)->startOfDay();
 
         return new static($startDate, $endDate);
     }

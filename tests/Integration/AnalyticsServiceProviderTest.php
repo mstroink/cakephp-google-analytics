@@ -2,41 +2,57 @@
 
 namespace Spatie\Analytics\Tests\Integration;
 
-use Analytics;
+use Cake\Chronos\Chronos;
+use Cake\Core\Configure;
+use Cake\Core\Container;
+use Cake\Core\ContainerInterface;
+use Cake\TestSuite\TestCase;
 use Carbon\Carbon;
+use Spatie\Analytics\Analytics;
+use Spatie\Analytics\AnalyticsServiceProvider;
 use Spatie\Analytics\Exceptions\InvalidConfiguration;
 use Storage;
 
 class AnalyticsServiceProviderTest extends TestCase
 {
+    protected ContainerInterface $container;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container = new Container();
+        $this->container->addServiceProvider(new AnalyticsServiceProvider());
+
+        Configure::write('Analytics', [
+            'cache' => ['config' => 'analytics'],
+            'cache_lifetime_in_minutes' => 0,
+            'view_id' => '123',
+        ]);
+    }
+    
     /** @test */
     public function it_will_throw_an_exception_if_the_view_id_is_not_set()
     {
-        $this->app['config']->set('analytics.view_id', '');
-
+        Configure::write('Analytics.view_id', '');
+    
         $this->expectException(InvalidConfiguration::class);
 
-        Analytics::fetchVisitorsAndPageViews(Carbon::now()->subDay(), Carbon::now());
+        $analytics = $this->container->get(Analytics::class);
+
+        $analytics->fetchVisitorsAndPageViews(Chronos::now()->subDay(), Chronos::now());
     }
 
     /** @test */
     public function it_allows_credentials_json_file()
     {
-        Storage::fake('testing-storage');
+        $tmpPath = tempnam(sys_get_temp_dir(), 'analytics');
 
-        Storage::disk('testing-storage')
-            ->put('test-credentials.json', json_encode($this->get_credentials()));
+        file_put_contents($tmpPath, json_encode($this->get_credentials()));
 
-        $credentials_json_file_path = Storage::disk('testing-storage')
-            ->getDriver()
-            ->getAdapter()
-            ->applyPathPrefix('test-credentials.json');
+        Configure::write('Analytics.service_account_credentials_json', $tmpPath);
 
-        $this->app['config']->set('analytics.view_id', '123456');
-
-        $this->app['config']->set('analytics.service_account_credentials_json', $credentials_json_file_path);
-
-        $analytics = $this->app['laravel-analytics'];
+        $analytics = $this->container->get(Analytics::class);
 
         $this->assertInstanceOf(\Spatie\Analytics\Analytics::class, $analytics);
     }
@@ -44,23 +60,21 @@ class AnalyticsServiceProviderTest extends TestCase
     /** @test */
     public function it_will_throw_an_exception_if_the_credentials_json_does_not_exist()
     {
-        $this->app['config']->set('analytics.view_id', '123456');
-
-        $this->app['config']->set('analytics.service_account_credentials_json', 'bogus.json');
+        Configure::write('Analytics.service_account_credentials_json', 'bogus.json');
 
         $this->expectException(InvalidConfiguration::class);
 
-        Analytics::fetchVisitorsAndPageViews(Carbon::now()->subDay(), Carbon::now());
+        $analytics = $this->container->get(Analytics::class);
+
+        $analytics->fetchVisitorsAndPageViews(Chronos::now()->subDay(), Chronos::now());
     }
 
     /** @test */
     public function it_allows_credentials_json_to_be_array()
     {
-        $this->app['config']->set('analytics.view_id', '123456');
+        Configure::write('Analytics.service_account_credentials_json', $this->get_credentials());
 
-        $this->app['config']->set('analytics.service_account_credentials_json', $this->get_credentials());
-
-        $analytics = $this->app['laravel-analytics'];
+        $analytics = $this->container->get(Analytics::class);
 
         $this->assertInstanceOf(\Spatie\Analytics\Analytics::class, $analytics);
     }
