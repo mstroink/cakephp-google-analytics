@@ -1,3 +1,5 @@
+Forked from spatie/laravel-analytics (2021):
+
 The MIT License (MIT)
 
 Copyright (c) Spatie bvba <info@spatie.be>
