@@ -11,14 +11,6 @@
     ],
     "homepage": "https://github.com/mstroink/cakephp-google-analytics",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Freek Van der Herten",
-            "email": "freek@spatie.be",
-            "homepage": "https://murze.be",
-            "role": "Developer"
-        }
-    ],
     "require": {
         "php": "^8.0",
         "cakephp/cakephp": "~4.2.0",
