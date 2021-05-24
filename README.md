@@ -6,7 +6,7 @@
 ![Check & fix styling](https://github.com/mstroink/cakephp-google-analytics/workflows/Check%20&%20fix%20styling/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/mstroink/cakephp-google-analytics.svg?style=flat-square)](https://packagist.org/packages/mstroink/cakephp-google-analytics)
 
-Just a simple port of the spatie/laravel-analytics package re-worked for CakePHP ^4.2.
+Just a simple port of the spatie/laravel-analytics package re-worked for CakePHP ^4.2 (php 8.0).
 Be aware this plugin use the new Dependency Injection Container. This is an experimental feature that is not API stable yet.
 
 Using this package you can easily retrieve data from Google Analytics.

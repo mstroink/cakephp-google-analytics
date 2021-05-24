@@ -159,7 +159,7 @@ class AnalyticsTest extends TestCase
         $expectedArguments = [
             $this->viewId,
             'rt:activeUsers',
-            []
+            [],
         ];
 
         $this->analyticsClient
