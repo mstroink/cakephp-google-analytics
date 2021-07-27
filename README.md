@@ -39,7 +39,7 @@ Most methods will return an `\Cake\Collection\Collection` object containing the 
 This package can be installed through Composer.
 
 ``` bash
-composer require mstroink/cakephp-analytics
+composer require mstroink/cakephp-google-analytics
 ```
 
 Load the plugin
