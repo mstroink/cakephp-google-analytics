@@ -31,7 +31,7 @@ class DashboardController extends AppController
 }
 ```
 
-Most methods will return an `\Illuminate\Support\Collection` object containing the results.
+Most methods will return an `\Cake\Collection\Collection` object containing the results.
 
 
 ## Installation
