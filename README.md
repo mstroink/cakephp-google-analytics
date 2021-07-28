@@ -31,7 +31,7 @@ class DashboardController extends AppController
 }
 ```
 
-Most methods will return an `\Illuminate\Support\Collection` object containing the results.
+Most methods will return an `\Cake\Collection\Collection` object containing the results.
 
 
 ## Installation
@@ -39,7 +39,7 @@ Most methods will return an `\Illuminate\Support\Collection` object containing t
 This package can be installed through Composer.
 
 ``` bash
-composer require mstroink/cakephp-analytics
+composer require mstroink/cakephp-google-analytics
 ```
 
 Load the plugin
