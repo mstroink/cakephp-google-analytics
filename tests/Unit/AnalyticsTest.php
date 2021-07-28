@@ -175,6 +175,34 @@ class AnalyticsTest extends TestCase
     }
 
     /** @test */
+    public function it_can_fetch_channels()
+    {
+        $expectedArguments = [
+            $this->viewId,
+            $this->expectChronos($this->startDate),
+            $this->expectChronos($this->endDate),
+            'ga:pageviews, ga:users, ga:sessions',
+            ['dimensions' => 'ga:channelGrouping', 'sort' => '-ga:pageviews'],
+        ];
+
+        $this->analyticsClient
+            ->shouldReceive('performQuery')->withArgs($expectedArguments)
+            ->once()
+            ->andReturn([
+                'rows' => [['Organic Search', 50, 25, 30]],
+            ]);
+
+        $response = $this->analytics->fetchChannels(Period::create($this->startDate, $this->endDate));
+
+        $this->assertInstanceOf(Collection::class, $response);
+
+        $this->assertEquals('Organic Search', $response->first()['channel']);
+        $this->assertEquals(50, $response->first()['pageviews']);
+        $this->assertEquals(25, $response->first()['users']);
+        $this->assertEquals(30, $response->first()['sessions']);
+    }
+
+    /** @test */
     public function it_can_fetch_the_top_browsers()
     {
         $expectedArguments = [

@@ -124,6 +124,27 @@ class Analytics
         return $response['rows'][0][0] ?? 0;
     }
 
+    public function fetchChannels(Period $period): Collection
+    {
+        $response = $this->performQuery(
+            $period,
+            'ga:pageviews, ga:users, ga:sessions',
+            [
+                'dimensions' => 'ga:channelGrouping',
+                'sort' => '-ga:pageviews',
+            ]
+        );
+
+        return collection($response['rows'] ?? [])
+            ->map(fn (array $pageRow) => [
+                'channel' => $pageRow[0],
+                'pageviews' => $pageRow[1],
+                'users' => $pageRow[2],
+                'sessions' => $pageRow[3],
+            ])
+            ->indexBy('channel');
+    }
+
     public function fetchTopBrowsers(Period $period, int $maxResults = 10): Collection
     {
         $response = $this->performQuery(
