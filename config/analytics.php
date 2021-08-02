@@ -20,7 +20,11 @@ return [
      */
     'cache_lifetime_in_minutes' => 60 * 24,
 
+    /*
+     * The names of the cache engines to use
+     */
     'cache' => [
-        'config' => 'analytics',
+        'analytics' => 'google_analytics', // Required for caching google analytics results
+        'auth' => false, // The cache engine that the underlying Google_Client will use to store it's auth data
     ],
 ];

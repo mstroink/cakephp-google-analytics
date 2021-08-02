@@ -30,14 +30,17 @@ class AnalyticsClientFactory
 
         $client->setAuthConfig($config['service_account_credentials_json']);
 
-        self::configureClientCache($client, $config['cache']);
+        $cacheConfig = $config['cache']['auth'] ?? false;
+        if ($cacheConfig) {
+            self::configureClientCache($client, $cacheConfig);
+        }
 
         return $client;
     }
 
-    protected static function configureClientCache(Google_Client $client, array $config): void
+    protected static function configureClientCache(Google_Client $client, $cacheConfig): void
     {
-        $engine = self::createCacheEngine($config);
+        $engine = self::createCacheEngine($cacheConfig);
 
         $cache = new Psr16Adapter($engine);
 
@@ -46,7 +49,7 @@ class AnalyticsClientFactory
 
     protected static function createAnalyticsClient(array $config, Google_Service_Analytics $googleService): AnalyticsClient
     {
-        $cache = self::createCacheEngine($config['cache']);
+        $cache = self::createCacheEngine($config['cache']['analytics'] ?? 'google_analytics');
 
         $client = new AnalyticsClient($googleService, $cache);
 
@@ -55,10 +58,8 @@ class AnalyticsClientFactory
         return $client;
     }
 
-    protected static function createCacheEngine(array $cacheConfig): CacheEngine
+    protected static function createCacheEngine(string $name): CacheEngine
     {
-        $name = $cacheConfig['config'] ?? 'analytics';
-
         if (Cache::getConfig($name) === null) {
             Cache::setConfig($name, [
                 'className' => FileEngine::class,

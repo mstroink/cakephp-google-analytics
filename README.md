@@ -77,15 +77,16 @@ return [
      * The name of the cache config engine
      */
     'cache' => [
-        'config' => 'analytics',
+        'analytics' => 'google_analytics',
+        'auth' => 'google_auth',
     ],
 ];
 ```
 
-In your config/app.php add a cache config named `analytics` under the Cache key with required config. For e.g.:
+In your config/app.php add a cache config named `analytics_results` under the Cache key with required config. For e.g.:
 
 ```php
-'analytics' => [
+'analytics_results' => [
     'className' => FileEngine::class,
     'duration' => '+1 year', //note that lifetime is managed by setting cache_lifetime_in_minutes
 ],

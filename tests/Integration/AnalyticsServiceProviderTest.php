@@ -23,7 +23,10 @@ class AnalyticsServiceProviderTest extends TestCase
         $this->container->addServiceProvider(new AnalyticsServiceProvider());
 
         Configure::write('Analytics', [
-            'cache' => ['config' => 'analytics'],
+            'cache' => [
+                'analytics' => 'google_analytics',
+                'auth' => false,
+            ],
             'cache_lifetime_in_minutes' => 0,
             'view_id' => '123',
         ]);
